@@ -1,0 +1,12 @@
+x = bob +
+good * awful 
++ -5.6767 + 5 + -6;
+// hey man
+/* sup dude */
+int i = 9; /* dude sup
+hows it goin */
+/* this should work
+* right? i think
+so lol */
+
+intOne = 2;
