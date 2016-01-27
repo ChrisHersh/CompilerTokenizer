@@ -7,9 +7,6 @@ import java.util.regex.Pattern;
 
 public class Tokenizer {
     
-    String MULTILINE_COMMENT_START = "^/*";
-    String MULTILINE_COMMENT_END = "^*/";
-    
     //Note: these are sorted in order of priority
     //it is not using the same order as the assignment sheet
     public static String[][] POSSIBLE_TOKENS = {
@@ -25,13 +22,13 @@ public class Tokenizer {
             { "^(\\()", "L_PARA"},
             { "^(\\))", "R_PARA"},
         //Key Words
-            { "^(int)\\W", "INT" },
-            { "^(double)\\W", "DOUBLE" },
-            { "^(char)\\W", "CHAR" },
-            { "^(boolean)\\W", "BOOLEAN" },
-            { "^(if)\\W", "IF" },
-            { "^(while)\\W", "WHILE" },
-            { "^(void)\\W", "VOID" },
+            { "^(int)(\\W|\\Z)", "INT" },
+            { "^(double)(\\W|\\Z)", "DOUBLE" },
+            { "^(char)(\\W|\\Z)", "CHAR" },
+            { "^(boolean)(\\W|\\Z)", "BOOLEAN" },
+            { "^(if)(\\W|\\Z)", "IF" },
+            { "^(while)(\\W|\\Z)", "WHILE" },
+            { "^(void)(\\W|\\Z)", "VOID" },
             
         //Symbols
             
@@ -96,26 +93,31 @@ public class Tokenizer {
 					tokens.add(tmp);
 					mlBuffer = "";
 					
-					tokens.addAll(tokenizeString(line, lineNum));
+					//tokens.addAll(tokenizeString(line, lineNum));
 				}
 				else if(line.contains("/*"))
 				{
 					ml_comment = true;
 					mlLineStart = lineNum;
-					mlBuffer += line.substring(line.indexOf("/*"));
-					line = line.substring(0, line.indexOf("/*"));
+					String linetmp = line;
 					
-					tokens.addAll(tokenizeString(line, lineNum));
+					mlBuffer = line.substring(line.indexOf("/*"));
+				    line = line.substring(0, line.indexOf("/*"));
+                    
+                    tokens.addAll(tokenizeString(line, lineNum));
 					
 					if(mlBuffer.contains("*/"))
 					{
 						ml_comment = false;
+						mlBuffer = mlBuffer.substring(mlBuffer.indexOf("/*"), mlBuffer.indexOf("*/")+2);
 						Token tmp = new Token();
 						tmp.lineNumber = mlLineStart;
 						tmp.token = mlBuffer;
 						tmp.tokenName = "ML_COMMENT";
 						tokens.add(tmp);
 						mlBuffer = "";
+						
+						line = linetmp.substring(linetmp.indexOf("*/")+2);
 					}
 					else{
 					    mlBuffer += "\n";

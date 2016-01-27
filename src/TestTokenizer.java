@@ -191,6 +191,38 @@ public class TestTokenizer {
         assertEquals(list.get(2).tokenName, "JUNK");
         assertEquals(list.get(3).tokenName, "JUNK");
     }
-
     
+    @Test 
+    public void testMLComment()
+    {
+        ArrayList<Token> list = Tokenizer.tokenizeProgram("MLComment.txt");
+        assertEquals(list.size(), 6);
+        
+        assertEquals(list.get(0).token, "before");
+        assertEquals(list.get(1).token, "/*This is a\nmultiline\ncomment*/");
+        assertEquals(list.get(2).token, "after");
+        assertEquals(list.get(3).token, "before2");
+        assertEquals(list.get(4).token, "/*single line*/");
+        assertEquals(list.get(5).token, "after2");
+        
+        assertEquals(list.get(0).tokenName, "ID");
+        assertEquals(list.get(1).tokenName, "ML_COMMENT");
+        assertEquals(list.get(2).tokenName, "ID");
+        assertEquals(list.get(3).tokenName, "ID");
+        assertEquals(list.get(4).tokenName, "ML_COMMENT");
+        assertEquals(list.get(5).tokenName, "ID");
+    }
+    
+    @Test
+    public void testToken()
+    {
+        Token t = new Token();
+        t.token = "name";
+        t.tokenName = "NAME";
+        t.lineNumber = 1;
+        
+        assertEquals(t.getToken(), "name");
+        assertEquals(t.getTokenName(), "NAME");
+        assertEquals(t.getLineNumber(), 1);
+    }
 }
